@@ -1,0 +1,143 @@
+// -*- mode: jsonc -*-
+{
+    "layer": "top", // Waybar at top layer
+    "position": "top", // Waybar position (top|bottom|left|right)
+    //"height": 42, // Waybar height (to be removed for auto height)
+    "spacing": 5, // Gaps between modules (4px)
+    "margin-left": 600,
+    "margin-right": 600,
+
+    // Choose the order of the modules
+    "modules-left": [
+        "custom/rofi",
+        "hyprland/workspaces" ,
+        "custom/launcher"
+    ],
+    "modules-center": [
+        "hyprland/window"
+    ],
+    "modules-right": [
+        "custom/updates",
+        "group/hardware",
+        "tray",
+        "clock",
+        "group/shut"
+    ],
+
+
+    // Modules configuration
+    "hyprland/workspaces": {
+        "on-scroll-up": "hyprctl dispatch workspace e+1",
+        "on-scroll-down": "hyprctl dispatch workspace e-1",
+        "active-only": false,
+        "format": "{icon}",
+        "format-icons":{
+            "active": ""
+        },
+        "persistent-workspaces": {
+            "*": 3
+        }
+    },
+
+    "hyprland/window": {
+    "rewrite": {
+        "(.*) — Mozilla Firefox": "$1",
+        "(.*) - Visual Studio Code": "$1",
+        "(.*) - Steam": "$1",
+        "(.*) - kitty": "$1"
+    },
+    "separate-outputs": true
+    },
+
+    "group/hardware": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-power",
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "cpu",
+            "memory"
+        ]
+    },
+
+
+    "clock": {
+        // "timezone": "America/New_York",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%d-%m-%y}"
+        
+    },
+    "cpu": {
+        "format": "{usage}% ",
+        "on-click": "kitty -e top",
+        "tooltip": false
+    },
+    "memory": {
+        "format": "{}% "
+    },
+
+
+    "custom/updates": {
+    "exec": "bash $HOME/.config/waybar/scripts/checkupdates.sh", // <--- path to script
+    "on-click-right": "bash $HOME/.config/waybar/scripts/checkupdates.sh", // refresh on right click
+    "on-click-middle":"hyprctl dispatch exec 'kitty -e sudo dnf update'", // update on middle click    
+    "interval": 100, // refresh 
+    "return-type": "json",
+    "format": "{icon}",
+    "format-alt": "{} {icon}",
+    "format-icons": {
+        "has-updates": "", // icon when updates needed
+        "updated": "" // icon when all packages updated
+    }
+    },
+   
+"custom/shutdown": {
+    "format": "",  // ícone que você deseja exibir, pode ser alterado
+    "on-click": "hyprctl dispatch exec 'systemctl poweroff'",  // executar no clique
+    "tooltip": false,
+    "interval": 0
+},
+
+"custom/reboot": {
+    "format": "",
+    "on-click": "hyprctl dispatch exec 'systemctl reboot'",
+    "tooltip":false,
+    "interval": 0
+},
+
+
+"custom/logoff": {
+    "format": "",
+    "on-click": "hyprctl dispatch exec 'hyprctl dispatch exit'",
+    "tooltip": false,
+    "interval": 0
+},
+
+"group/shut":{
+    "orientation": "inherit",
+    "drawer": {
+        "transition-duration": 500,
+        "children-class": "not-power",
+        "transition-left-to-right": false
+    },
+    "modules": [
+        "custom/shutdown",
+        "custom/reboot",
+        "custom/logoff"
+    ]
+},
+
+"tray": {
+    "icon-size": 18,
+    "spacing": 20
+},
+
+"custom/rofi":{
+    "format": "",
+    "return-type": "json",
+    "interval": 0,
+    "on-click": "rofi -show drun"
+}
+}
